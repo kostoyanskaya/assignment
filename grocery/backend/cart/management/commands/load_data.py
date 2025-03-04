@@ -1,11 +1,14 @@
 import json
-import os
-from django.core.management.base import BaseCommand
+
 from django.contrib.auth import get_user_model
+from django.core.management.base import BaseCommand
+
 from cart.models import Cart, CartItem
-from products.models import Category, SubCategory, Product
+from products.models import Category,  Product, SubCategory
+
 
 User = get_user_model()
+
 
 class Command(BaseCommand):
     help = 'Load data from JSON files'
@@ -30,8 +33,12 @@ class Command(BaseCommand):
             for subcategory_data in subcategories:
                 category_name = subcategory_data.pop('category_name')
                 category = Category.objects.get(name=category_name)
-                SubCategory.objects.get_or_create(category=category, **subcategory_data)
-        self.stdout.write(self.style.SUCCESS('Подкатегории успешно загружены.'))
+                SubCategory.objects.get_or_create(
+                    category=category, **subcategory_data
+                )
+        self.stdout.write(
+            self.style.SUCCESS('Подкатегории успешно загружены.')
+        )
 
     def load_products(self):
         with open('data/products.json', 'r', encoding='utf-8') as file:
@@ -39,7 +46,9 @@ class Command(BaseCommand):
             for product_data in products:
                 subcategory_name = product_data.pop('subcategory_name')
                 subcategory = SubCategory.objects.get(name=subcategory_name)
-                Product.objects.get_or_create(subcategory=subcategory, **product_data)
+                Product.objects.get_or_create(
+                    subcategory=subcategory, **product_data
+                )
         self.stdout.write(self.style.SUCCESS('Продукты успешно загружены.'))
 
     def load_users(self):
@@ -47,7 +56,9 @@ class Command(BaseCommand):
             users = json.load(file)
             for user_data in users:
                 User.objects.create_user(**user_data)
-        self.stdout.write(self.style.SUCCESS('Пользователи успешно загружены.'))
+        self.stdout.write(
+            self.style.SUCCESS('Пользователи успешно загружены.')
+        )
 
     def load_carts(self):
         with open('data/carts.json', 'r', encoding='utf-8') as file:
@@ -56,6 +67,11 @@ class Command(BaseCommand):
                 user = User.objects.get(username=cart_data['user_username'])
                 cart, created = Cart.objects.get_or_create(user=user)
                 for item_data in cart_data['items']:
-                    product = Product.objects.get(name=item_data['product_name'])
-                    CartItem.objects.get_or_create(cart=cart, product=product, quantity=item_data['quantity'])
+                    product = Product.objects.get(
+                        name=item_data['product_name']
+                    )
+                    CartItem.objects.get_or_create(
+                        cart=cart, product=product,
+                        quantity=item_data['quantity']
+                    )
         self.stdout.write(self.style.SUCCESS('Корзины успешно загружены.'))
