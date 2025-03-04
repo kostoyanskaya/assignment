@@ -9,11 +9,16 @@ SECRET_KEY = 'django-insecure-vpc3@#wthukb22dm8)9l7x24!@m&^#*rsm1$(dbb2-y&tt9i1!
 
 FRONTEND_DIR = os.path.join(BASE_DIR, '..', 'frontend')
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, '..', 'frontend'),
-    os.path.join(BASE_DIR, 'static'),
-]
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, '..', 'frontend'),
+]
 
 DEBUG = True
 
@@ -114,8 +119,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-MEDIA_URL = '/media/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

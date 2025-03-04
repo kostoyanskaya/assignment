@@ -1,0 +1,4 @@
+[
+    {"name": "Фрукты", "slug": "fruits", "image": "categories/fruits.jpeg"},
+    {"name": "Овощи", "slug": "vegetables", "image": "categories/vegetables.jpg"}
+]
