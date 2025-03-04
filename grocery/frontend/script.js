@@ -1,58 +1,78 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('token'); // Получаем токен
+    const token = localStorage.getItem('token');
+
     if (!token) {
-        alert('Вы не авторизованы. Пожалуйста, войдите.');
         window.location.href = '/login/';
         return;
     }
+
+    document.getElementById('logout-button').addEventListener('click', () => {
+
+        localStorage.removeItem('token');
+        window.location.href = '/login/';
+    });
 
     const cartItemsDiv = document.getElementById('cart-items');
     const totalPriceSpan = document.getElementById('total-price');
     const clearCartButton = document.getElementById('clear-cart');
     const addItemForm = document.getElementById('add-item-form');
 
+
     fetchCart();
-    fetchCategories(); // Добавляем вызов для загрузки категорий
+    fetchCategories();
+
+    function handleApiError(error) {
+        console.error(error);
+        if (error.status === 401) {
+            alert('Ваша сессия истекла. Пожалуйста, войдите снова.');
+            window.location.href = '/login/';
+        } else {
+            alert('Произошла ошибка. Пожалуйста, попробуйте снова.');
+        }
+    }
+
+    async function fetchCart() {
+        try {
+            const response = await fetch('/api/cart/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+
+                throw { status: response.status, message: response.statusText };
+            }
+
+            const data = await response.json();
+            console.log('Cart data:', data);
+            renderCart(data);
+        } catch (error) {
+            handleApiError(error);
+        }
+    }
+
 
     async function fetchCategories() {
         try {
-            const response = await fetch('/api/categories/');
+            const response = await fetch('/api/categories/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
             if (!response.ok) {
-                throw new Error('Ошибка при загрузке категорий: ' + response.statusText);
+                throw { status: response.status, message: response.statusText };
             }
+
             const data = await response.json();
             renderCategories(data.results);
         } catch (error) {
-            console.error(error);
-            alert('Не удалось загрузить категории.');
-        }
-    }
-
-    async function fetchSubCategories(categoryId) {
-        try {
-            const response = await fetch(`/api/subcategories/?category=${categoryId}`);
-            if (!response.ok) {
-                throw new Error('Ошибка при загрузке подкатегорий: ' + response.statusText);
-            }
-            const data = await response.json();
-            renderSubCategories(data.results);
-        } catch (error) {
-            console.error(error);
-            alert('Не удалось загрузить подкатегории.');
-        }
-    }
-
-    async function fetchProducts(subCategoryId) {
-        try {
-            const response = await fetch(`/api/products/?sub_category=${subCategoryId}`);
-            if (!response.ok) {
-                throw new Error('Ошибка при загрузке продуктов: ' + response.statusText);
-            }
-            const data = await response.json();
-            renderProducts(data.results);
-        } catch (error) {
-            console.error(error);
-            alert('Не удалось загрузить продукты.');
+            handleApiError(error);
         }
     }
 
@@ -61,8 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
         categoriesList.innerHTML = '';
         categories.forEach(category => {
             const categoryDiv = document.createElement('div');
+            categoryDiv.classList.add('category');
             categoryDiv.innerHTML = `
-                <img src="${category.image}" alt="${category.name}" style="width:100px;height:100px;">
+                <img src="${category.image}" alt="${category.name}">
                 <span>${category.name}</span>
             `;
             categoryDiv.addEventListener('click', () => fetchSubCategories(category.id));
@@ -70,13 +91,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    async function fetchSubCategories(categoryId) {
+        try {
+            const response = await fetch(`/api/subcategories/?category=${categoryId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw { status: response.status, message: response.statusText };
+            }
+
+            const data = await response.json();
+            renderSubCategories(data.results);
+        } catch (error) {
+            handleApiError(error);
+        }
+    }
+
+
     function renderSubCategories(subCategories) {
         const subCategoriesList = document.getElementById('subcategories-list');
         subCategoriesList.innerHTML = '';
         subCategories.forEach(subCategory => {
             const subCategoryDiv = document.createElement('div');
+            subCategoryDiv.classList.add('subcategory');
             subCategoryDiv.innerHTML = `
-                <img src="${subCategory.image}" alt="${subCategory.name}" style="width:100px;height:100px;">
+                <img src="${subCategory.image}" alt="${subCategory.name}">
                 <span>${subCategory.name}</span>
             `;
             subCategoryDiv.addEventListener('click', () => fetchProducts(subCategory.id));
@@ -84,26 +128,48 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
+    async function fetchProducts(subCategoryId) {
+        try {
+            const response = await fetch(`/api/products/?sub_category=${subCategoryId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw { status: response.status, message: response.statusText };
+            }
+
+            const data = await response.json();
+            renderProducts(data.results);
+        } catch (error) {
+            handleApiError(error);
+        }
+    }
+
     function renderProducts(products) {
         const productsList = document.getElementById('products-list');
         productsList.innerHTML = '';
         products.forEach(product => {
             const productDiv = document.createElement('div');
+            productDiv.classList.add('product');
             productDiv.innerHTML = `
-                <img src="${product.image_small}" alt="${product.name}" style="width:100px;height:100px;">
+                <img src="${product.image_small}" alt="${product.name}">
                 <span>${product.name}</span>
                 <span>${product.price} руб.</span>
                 <button class="add-to-cart" data-product="${product.name}" data-id="${product.id}">Добавить в корзину</button>
             `;
             productDiv.querySelector('.add-to-cart').addEventListener('click', () => {
-                // Заполняем поле Название товара
                 document.getElementById('product-name').value = product.name;
-                // Заполняем поле Количество по умолчанию 1, если это нужно:
                 document.getElementById('quantity').value = 1;
             });
             productsList.appendChild(productDiv);
         });
     }
+
 
     async function addToCart(productId) {
         try {
@@ -121,14 +187,24 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             alert('Товар добавлен в корзину.');
-            fetchCart(); // Обновляем корзину после добавления товара
+            fetchCart();
         } catch (error) {
             console.error(error);
             alert('Не удалось добавить товар.');
         }
     }
 
-    // Функция для обновления отображения корзины
+
+    function handleApiError(error) {
+        console.error(error);
+        if (error.status === 401) {
+            window.location.href = '/login/';
+        } else {
+            alert('Произошла ошибка. Пожалуйста, попробуйте снова.');
+        }
+    }
+
+
     async function fetchCart() {
         try {
             const response = await fetch('/api/cart/', {
@@ -138,29 +214,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json'
                 }
             });
-            
+
             if (!response.ok) {
-                console.error('Ошибка:', response.status, response.statusText);
-                alert('Не удалось загрузить корзину.');
-                return;
+
+                throw { status: response.status, message: response.statusText };
             }
 
             const data = await response.json();
-            console.log('Cart data:', data); // Вывод данных корзины в консоль для проверки
+            console.log('Cart data:', data);
             renderCart(data);
         } catch (error) {
-            console.error(error);
-            alert('Не удалось загрузить корзину.');
+            handleApiError(error);
         }
     }
 
-    // Функция для отображения корзины
+
     function renderCart(cartData) {
         cartItemsDiv.innerHTML = '';
         let total = 0;
 
         if (cartData.results.length > 0) {
-            const cart = cartData.results[0]; // Получаем первую корзину
+            const cart = cartData.results[0];
 
             cart.items.forEach(item => {
                 const itemDiv = document.createElement('div');
@@ -177,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 total += item.product.price * item.quantity;
             });
 
-            // Обновляем обработчики для кнопок
+
             addEventListenersToButtons();
         } else {
             cartItemsDiv.innerHTML = '<p>Корзина пуста.</p>';
@@ -203,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (quantity !== null) {
             try {
                 const response = await fetch('/api/cart/update_item/', {
-                    method: 'POST',  // Измените на 'PUT', если API требует это
+                    method: 'POST',
                     headers: {
                         'Authorization': `Token ${token}`,
                         'Content-Type': 'application/json'
@@ -256,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Обработчик для очистки корзины
+
     clearCartButton.addEventListener('click', async () => {
         try {
             const response = await fetch('/api/cart/clear/', {
@@ -280,7 +354,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     
-    // Обработчик для добавления товара
     addItemForm.addEventListener('submit', async (event) => {
         event.preventDefault();
 
@@ -312,6 +385,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Инициализация
+
     fetchCart();
 });

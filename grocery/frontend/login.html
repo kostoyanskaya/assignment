@@ -5,7 +5,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход в систему</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #message {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #e74c3c;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -13,8 +73,10 @@
         <form id="loginForm">
             <label for="username">Имя пользователя:</label>
             <input type="text" id="username" name="username" required>
+
             <label for="password">Пароль:</label>
             <input type="password" id="password" name="password" required>
+
             <button type="submit">Войти</button>
         </form>
         <div id="message"></div>
@@ -41,13 +103,13 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            const csrfToken = getCookie('csrftoken'); // Получаем CSRF токен
+            const csrfToken = getCookie('csrftoken');
 
             const response = await fetch('/auth/token/login/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken // Добавляем токен CSRF в заголовки
+                    'X-CSRFToken': csrfToken
                 },
                 body: JSON.stringify({ username, password })
             });
@@ -57,10 +119,9 @@
 
             if (response.ok) {
                 messageDiv.textContent = 'Успешный вход!';
-                localStorage.setItem('token', data.auth_token); // Сохраните токен в локальном хранилище
+                localStorage.setItem('token', data.auth_token);
 
-                // Редирект на главную страницу
-                window.location.href = '/'; // Замените на нужный вам URL для страницы index
+                window.location.href = '/';
             } else {
                 messageDiv.textContent = 'Ошибка: ' + (data.detail || 'Неизвестная ошибка');
             }

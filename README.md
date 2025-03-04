@@ -39,10 +39,10 @@ git clone https://github.com/kostoyanskaya/assignment.git
 ```
 
 
-1. Переход в директорию storage
+1. Переход в директорию storehouse
 
 ```
-cd storage
+cd storehouse
 ```
 
 3. Создание виртуального окружения
@@ -69,10 +69,10 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-7. Переход в директорию myproject
+7. Переход в директорию grosery
 
 ```
-cd myproject/backend
+cd grosery/backend
 ```
 
 8. Применение миграций

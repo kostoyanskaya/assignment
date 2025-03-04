@@ -71,3 +71,48 @@ button {
 button:hover {
     background-color: #218838;
 }
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.category, .subcategory, .product {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.category:hover, .subcategory:hover, .product:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+}
+
+.category img, .subcategory img, .product img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.product {
+    width: 200px;
+}
+
+.product button {
+    margin-top: 0.5rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.product button:hover {
+    background-color: #0056b3;
+}

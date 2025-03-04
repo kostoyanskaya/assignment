@@ -9,7 +9,11 @@
 </head>
 <body>
     <header>
-        <h1>Корзина</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Корзина</h1>
+            <!-- Кнопка выхода -->
+            <button id="logout-button" style="margin-right: 20px;">Выход</button>
+        </div>
     </header>
 
     <main>
@@ -36,7 +40,7 @@
         <div id="categories-container">
             <h2>Категории</h2>
             <div id="categories-list" class="flex-container"></div>
-            
+        
             <h2>Подкатегории</h2>
             <div id="subcategories-list" class="flex-container"></div>
         
