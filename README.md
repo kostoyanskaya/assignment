@@ -39,10 +39,10 @@ git clone https://github.com/kostoyanskaya/assignment.git
 ```
 
 
-1. Переход в директорию storehouse
+1. Переход в директорию assignment
 
 ```
-cd storehouse
+cd assignment
 ```
 
 3. Создание виртуального окружения
