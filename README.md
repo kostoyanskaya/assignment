@@ -69,10 +69,11 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-7. Переход в директорию grosery
+7. Переход в директорию grocery
 
 ```
-cd grosery/backend
+cd grocery
+cd backend
 ```
 
 8. Применение миграций
