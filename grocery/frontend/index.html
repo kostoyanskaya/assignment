@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Корзина</h1>
+    </header>
+
+    <main>
+        <section id="cart-section">
+            <h2>Содержимое корзины</h2>
+            <div id="cart-items"></div>
+            <p><strong>Общая стоимость:</strong> <span id="total-price">0.00</span></p>
+            <button id="clear-cart">Очистить корзину</button>
+        </section>
+
+        <section id="add-item-section">
+            <h2>Добавить товар</h2>
+            <form id="add-item-form">
+                <label for="product-name">Название товара:</label>
+                <input type="text" id="product-name" name="product_name" required>
+
+                <label for="quantity">Количество:</label>
+                <input type="number" id="quantity" name="quantity" value="1" min="1" required>
+
+                <button type="submit">Добавить</button>
+            </form>
+        </section>
+
+        <div id="categories-container">
+            <h2>Категории</h2>
+            <div id="categories-list" class="flex-container"></div>
+            
+            <h2>Подкатегории</h2>
+            <div id="subcategories-list" class="flex-container"></div>
+        
+            <h2>Продукты</h2>
+            <div id="products-list" class="flex-container"></div>
+        </div>
+    </main>
+
+    <script src="{% static 'script.js' %}"></script>
+</body>
+</html>

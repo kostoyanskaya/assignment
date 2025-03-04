@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        .endpoint {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .endpoint h2 {
+            margin-top: 0;
+            color: #555;
+        }
+        .endpoint p {
+            margin: 10px 0;
+        }
+        .endpoint pre {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .endpoint .request, .endpoint .response {
+            margin-top: 20px;
+        }
+        .endpoint .request h3, .endpoint .response h3 {
+            margin-bottom: 10px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>API Documentation</h1>
+
+    <!-- Документация для пользователей -->
+    <div class="endpoint">
+        <h2>POST /auth/users/</h2>
+        <p>Регистрация нового пользователя.</p>
+
+        <div class="request">
+            <h3>Request</h3>
+            <p><strong>Method:</strong> POST</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "username": "string",
+    "email": "string",
+    "password": "string"
+}
+            </pre>
+        </div>
+
+        <div class="response">
+            <h3>Response</h3>
+            <p><strong>Status Code:</strong> 201 Created</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "id": 1,
+    "username": "string",
+    "email": "string"
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <h2>POST /auth/token/login/</h2>
+        <p>Получение токена для авторизации.</p>
+
+        <div class="request">
+            <h3>Request</h3>
+            <p><strong>Method:</strong> POST</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "username": "string",
+    "password": "string"
+}
+            </pre>
+        </div>
+
+        <div class="response">
+            <h3>Response</h3>
+            <p><strong>Status Code:</strong> 200 OK</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "auth_token": "string"
+}
+            </pre>
+        </div>
+    </div>
+
+    <!-- Документация для категорий -->
+    <div class="endpoint">
+        <h2>POST /api/categories/</h2>
+        <p>Создает новую категорию.</p>
+
+        <div class="request">
+            <h3>Request</h3>
+            <p><strong>Method:</strong> POST</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "name": "Новая категория",
+    "slug": "novaya-kategoriya",
+    "image": "data:image/png;base64,..."
+}
+            </pre>
+        </div>
+
+        <div class="response">
+            <h3>Response</h3>
+            <p><strong>Status Code:</strong> 201 Created</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "id": 1,
+    "name": "Новая категория",
+    "slug": "novaya-kategoriya",
+    "image": "http://example.com/media/categories/image.png"
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <h2>GET /api/categories/</h2>
+        <p>Получает список всех категорий с подкатегориями. Используется пагинация (по умолчанию 10 элементов на страницу).</p>
+
+        <div class="request">
+            <h3>Request</h3>
+            <p><strong>Method:</strong> GET</p>
+            <p><strong>Query Parameters:</strong></p>
+            <pre>
+?page=1  # Номер страницы
+            </pre>
+        </div>
+
+        <div class="response">
+            <h3>Response</h3>
+            <p><strong>Status Code:</strong> 200 OK</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "count": 15,  # Общее количество элементов
+    "next": "http://example.com/api/categories/?page=2",  # Ссылка на следующую страницу
+    "previous": null,  # Ссылка на предыдущую страницу
+    "results": [
+        {
+            "id": 1,
+            "name": "Категория 1",
+            "slug": "kategoriya-1",
+            "image": "http://example.com/media/categories/image1.png",
+        }
+    ]
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <h2>POST /api/subcategories/</h2>
+        <p>Создает новую подкатегорию.</p>
+
+        <div class="request">
+            <h3>Request</h3>
+            <p><strong>Method:</strong> POST</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "name": "Новая подкатегория",
+    "slug": "novaya-podkategoriya",
+    "image": "data:image/png;base64,...",
+    "category_name": "Категория 1"
+}
+            </pre>
+        </div>
+
+        <div class="response">
+            <h3>Response</h3>
+            <p><strong>Status Code:</strong> 201 Created</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "id": 1,
+    "name": "Новая подкатегория",
+    "slug": "novaya-podkategoriya",
+    "image": "http://example.com/media/subcategories/image.png",
+    "category": {
+        "id": 1,
+        "name": "Категория 1",
+        "slug": "kategoriya-1"
+    }
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <h2>GET /api/subcategories/</h2>
+        <p>Получает список всех подкатегорий. Используется пагинация (по умолчанию 10 элементов на страницу).</p>
+
+        <div class="request">
+            <h3>Request</h3>
+            <p><strong>Method:</strong> GET</p>
+            <p><strong>Query Parameters:</strong></p>
+            <pre>
+?page=1  # Номер страницы
+            </pre>
+        </div>
+
+        <div class="response">
+            <h3>Response</h3>
+            <p><strong>Status Code:</strong> 200 OK</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "count": 1,
+    "next": "http://example.com/api/subcategories/?page=2",
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "name": "Подкатегория 1",
+            "slug": "podkategoriya-1",
+            "image": "http://example.com/media/subcategories/image1.png",
+            "category": {
+                "id": 1,
+                "name": "Категория 1",
+                "slug": "kategoriya-1",
+                "image": "http://127.0.0.1:8000/media/categories/fruits.jpg"
+            }
+        }
+    ]
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <h2>POST /api/products/</h2>
+        <p>Создает новый продукт.</p>
+
+        <div class="request">
+            <h3>Request</h3>
+            <p><strong>Method:</strong> POST</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "name": "Новый продукт",
+    "slug": "novyy-produkt",
+    "subcategory_name": "Подкатегория 1",
+    "price": 100.0,
+    "image_small": "data:image/png;base64,...",
+    "image_medium": "data:image/png;base64,...",
+    "image_large": "data:image/png;base64,..."
+}
+            </pre>
+        </div>
+
+        <div class="response">
+            <h3>Response</h3>
+            <p><strong>Status Code:</strong> 201 Created</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "id": 1,
+    "name": "Новый продукт",
+    "slug": "novyy-produkt",
+    "subcategory": {
+        "id": 1,
+        "name": "Подкатегория 1",
+        "slug": "podkategoriya-1",
+        "image": "http://127.0.0.1:8000/media/subcategories/temp_nYyNqLE.png",
+        "category": {
+            "id": 1,
+            "name": "Категория 1",
+            "slug": "kategoriya-1",
+            "image": "http://127.0.0.1:8000/media/categories/temp_wjdzu6E.png"
+        }
+    },
+    "price": "100.00",
+    "image_small": "http://127.0.0.1:8000/media/products/small/temp_4HaDEBT.png",
+    "image_medium": "http://127.0.0.1:8000/media/products/medium/temp_7BNmERE.png",
+    "image_large": "http://127.0.0.1:8000/media/products/large/temp_0N5trp5.png"
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <h2>GET /api/products/</h2>
+        <p>Получает список всех продуктов. Используется пагинация (по умолчанию 10 элементов на страницу).</p>
+
+        <div class="request">
+            <h3>Request</h3>
+            <p><strong>Method:</strong> GET</p>
+            <p><strong>Query Parameters:</strong></p>
+            <pre>
+?page=1  # Номер страницы
+            </pre>
+        </div>
+
+        <div class="response">
+            <h3>Response</h3>
+            <p><strong>Status Code:</strong> 200 OK</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "name": "Продукт 1",
+            "slug": "produkt-1",
+            "subcategory": {
+                "id": 1,
+                "name": "Подкатегория 1",
+                "slug": "podkategoriya-1",
+                "image": "http://127.0.0.1:8000/media/subcategories/apples.jpg",
+                "category": {
+                    "id": 1,
+                    "name": "Категория 1",
+                    "slug": "kategoriya-1",
+                    "image": "http://127.0.0.1:8000/media/categories/fruits.jpg"
+                }
+            },
+            "price": "100.00",
+            "image_small": "http://127.0.0.1:8000/media/products/small/golden-apples.jpg",
+            "image_medium": "http://127.0.0.1:8000/media/products/medium/golden-apples.jpg",
+            "image_large": "http://127.0.0.1:8000/media/products/large/golden-apples.jpg"
+        }
+    ]
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <h2>POST /api/cart/add_item/</h2>
+        <p>Добавляет продукт в корзину.</p>
+
+        <div class="request">
+            <h3>Request</h3>
+            <p><strong>Method:</strong> POST</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "product_name": "string",
+    "quantity": 2
+}
+            </pre>
+        </div>
+
+        <div class="response">
+            <h3>Response</h3>
+            <p><strong>Status Code:</strong> 201 Created</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "id": 5,
+    "product": {
+        "id": 1,
+        "name": "Product 1",
+        "slug": "produkt-1",
+        "subcategory": {
+            "id": 1,
+            "name": "Подкатегория 1",
+            "slug": "podkategoriya-1",
+            "image": "/media/subcategories/apples.jpg",
+            "category": {
+                "id": 1,
+                "name": "Категория 1",
+                "slug": "kategoriya-1",
+                "image": "/media/categories/fruits.jpg"
+            }
+        },
+        "price": "10.00",
+        "image_small": "/media/products/small/golden-apples.jpg",
+        "image_medium": "/media/products/medium/golden-apples.jpg",
+        "image_large": "/media/products/large/golden-apples.jpg"
+    },
+    "quantity": 2
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <h2>GET /api/cart/</h2>
+        <p>Получает содержимое корзины.</p>
+
+        <div class="request">
+            <h3>Request</h3>
+            <p><strong>Method:</strong> GET</p>
+        </div>
+
+        <div class="response">
+            <h3>Response</h3>
+            <p><strong>Status Code:</strong> 200 OK</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 8,
+            "items": [
+                {
+                    "id": 5,
+                    "product": {
+                        "id": 1,
+                        "name": "Product 1",
+                        "slug": "produkt-1",
+                        "subcategory": {
+                            "id": 1,
+                            "name": "Подкатегория 1",
+                            "slug": "podkategoriya-1",
+                            "image": "http://127.0.0.1:8000/media/subcategories/apples.jpg",
+                            "category": {
+                                "id": 1,
+                                "name": "Категория 1",
+                                "slug": "kategoriya-1",
+                                "image": "http://127.0.0.1:8000/media/categories/fruits.jpg"
+                            }
+                        },
+                        "price": "100.00",
+                        "image_small": "http://127.0.0.1:8000/media/products/small/golden-apples.jpg",
+                        "image_medium": "http://127.0.0.1:8000/media/products/medium/golden-apples.jpg",
+                        "image_large": "http://127.0.0.1:8000/media/products/large/golden-apples.jpg"
+                    },
+                    "quantity": 3
+                }
+            ],
+            "total_price": 20.0,
+            "total_items": 2
+        }
+    ]
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <h2>POST /api/cart/update_item/</h2>
+        <p>Изменяет количество продукта в корзине.</p>
+
+        <div class="request">
+            <h3>Request</h3>
+            <p><strong>Method:</strong> PUT</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "product_name": "string",
+    "quantity": 5
+}
+            </pre>
+        </div>
+
+        <div class="response">
+            <h3>Response</h3>
+            <p><strong>Status Code:</strong> 200 OK</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "id": 1,
+    "product": {
+        "id": 1,
+        "name": "Product 1",
+        "slug": "produkt-1",
+        "subcategory": {
+            "id": 1,
+            "name": "Подкатегория 1",
+            "slug": "podkategoriya-1",
+            "image": "/media/subcategories/apples.jpg",
+            "category": {
+                "id": 1,
+                "name": "Категория 1",
+                "slug": "kategoriya-1",
+                "image": "/media/categories/fruits.jpg"
+            }
+        },
+        "price": "100.00",
+        "image_small": "/media/products/small/golden-apples.jpg",
+        "image_medium": "/media/products/medium/golden-apples.jpg",
+        "image_large": "/media/products/large/golden-apples.jpg"
+    },
+    "quantity": 5
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <h2>DELETE /api/cart/remove_item/</h2>
+        <p>Удаляет продукт из корзины.</p>
+
+        <div class="request">
+            <h3>Request</h3>
+            <p><strong>Method:</strong> DELETE</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "product_name": "string"
+}
+            </pre>
+        </div>
+
+        <div class="response">
+            <h3>Response</h3>
+            <p><strong>Status Code:</strong> 204 No Content</p>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <h2>DELETE /api/cart/clear/</h2>
+        <p>Очищает корзину.</p>
+
+        <div class="request">
+            <h3>Request</h3>
+            <p><strong>Method:</strong> DELETE</p>
+        </div>
+
+        <div class="response">
+            <h3>Response</h3>
+            <p><strong>Status Code:</strong> 200 OK</p>
+            <p><strong>Body:</strong></p>
+            <pre>
+{
+    "status": "cart cleared"
+}
+            </pre>
+        </div>
+    </div>
+</body>
+</html>

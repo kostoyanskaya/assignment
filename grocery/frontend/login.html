@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в систему</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Вход в систему</h1>
+        <form id="loginForm">
+            <label for="username">Имя пользователя:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Войти</button>
+        </form>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const csrfToken = getCookie('csrftoken'); // Получаем CSRF токен
+
+            const response = await fetch('/auth/token/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken // Добавляем токен CSRF в заголовки
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+            const messageDiv = document.getElementById('message');
+
+            if (response.ok) {
+                messageDiv.textContent = 'Успешный вход!';
+                localStorage.setItem('token', data.auth_token); // Сохраните токен в локальном хранилище
+
+                // Редирект на главную страницу
+                window.location.href = '/'; // Замените на нужный вам URL для страницы index
+            } else {
+                messageDiv.textContent = 'Ошибка: ' + (data.detail || 'Неизвестная ошибка');
+            }
+        });
+    </script>
+</body>
+</html>

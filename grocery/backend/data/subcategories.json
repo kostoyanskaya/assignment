@@ -1,0 +1,5 @@
+[
+    {"name": "Яблоки", "slug": "apples", "image": "subcategories/apples.jpg", "category_name": "Фрукты"},
+    {"name": "Бананы", "slug": "bananas", "image": "subcategories/nana.jpg", "category_name": "Фрукты"},
+    {"name": "Помидоры", "slug": "tomatoes", "image": "subcategories/tomatoes.jpg", "category_name": "Овощи"}
+]

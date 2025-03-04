@@ -1,0 +1,5 @@
+[
+    {"user_username": "user1", "items": [{"product_name": "Яблоки Голден", "quantity": 2}, {"product_name": "Бананы Экстра", "quantity": 3}]},
+    {"user_username": "user2", "items": [{"product_name": "Помидоры Черри", "quantity": 1}]},
+    {"user_username": "user3", "items": []}
+]

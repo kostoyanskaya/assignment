@@ -1,0 +1,6 @@
+[
+    {"name": "Яблоки Голден", "slug": "golden-apples", "subcategory_name": "Яблоки", "price": "100.00", "image_small": "products/small/gold.jpeg", "image_medium": "products/medium/gold.jpeg", "image_large": "products/large/gold.jpeg"},
+    {"name": "Яблоки Гренни", "slug": "granny-apples", "subcategory_name": "Яблоки", "price": "120.00", "image_small": "products/small/granny.jpeg", "image_medium": "products/medium/granny.jpeg", "image_large": "products/large/granny.jpeg"},
+    {"name": "Бананы Экстра", "slug": "extra-bananas", "subcategory_name": "Бананы", "price": "80.00", "image_small": "products/small/ba.jpg", "image_medium": "products/medium/ba.jpg", "image_large": "products/large/ba.jpg"},
+    {"name": "Помидоры Черри", "slug": "cherry-tomatoes", "subcategory_name": "Помидоры", "price": "150.00", "image_small": "products/small/cherry.jpeg", "image_medium": "products/medium/cherry.jpeg", "image_large": "products/large/cherry.jpeg"}
+]
